@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Jogo da Cobrinha - Prof Igor</title>
+</head>
+<body>
+    <canvas id="quadro" width="400" height="400"></canvas>
+    <script type="text/javascript">
+        window.onload = function(){
+            //Variaveis para criar o quadro do jogo
+            var stage = document.getElementById("quadro");
+            var ctx = stage.getContext("2d");
+            
+            document.addEventListener("keydown", teclado);
+            setInterval(jogo, 100);
+
+            //Constante de velocidade
+            const veloc = 1;
+            //Variaveis de velocidade de x e y
+            var velX = 0; 
+            var velY = 0;
+            //Onde começaremos o jogo 
+            var pontoX = 10;
+            var pontoY = 15;
+            //Tamanho da minha peça (quadrarinho)
+            var tamP = 20;
+            //Quantidade de peça
+            var qtdP = 20;
+            //Iniciando a comidinha
+            var comiX = comiY = 15;
+            //Criar rastro da cobra
+            var rastro = [];
+            rastro = 5;
+                       
+
+            function jogo(){
+                //Começa com a cobra parada
+                pontoX += velX;
+                pontoY += velY;
+                //Quando a cobra se mexer e passar a parede, aparece do outro lado
+                if(pontoX < 0){
+                    pontoX = qtdP-1;
+                }
+                if(pontoX > qtdP-1){
+                    pontoX = 0;
+                }
+                if(pontoY < 0){
+                    pontoY = qtdP-1;
+                }
+                if(pontoY > qtdP-1){
+                    pontoY = 0;
+                }
+
+                //Pintar a tela
+                ctx.fillStyle = "pink";
+                ctx.fillRect(0,0, stage.width, stage.height);
+
+                //Pintar comidinha
+                ctx.fillStyle = "red";
+                ctx.fillRect(comiX*tamP, comiY*tamP, tamP, tamP);
+
+                //Pintar a cobra e seu rastro
+                ctx.fillStyle = "gray";
+                for (var index = 0; index < rastro.length; index++) {
+                    ctx.fillRect(rastro[index].x * tamP, rastro[index].x, tamP, tamP);
+                    //Se a cobrinha bater nela mesma
+                    if(rastro[index].x == pontoX && rastro[index].y == pontoY){
+                        velX = 0;
+                        VelY = 0;
+                        alert("Sorry, game over!");
+                    }
+
+                }
+                //Movimento da cobra
+                rastro.push({
+                    x:pontoX,
+                    y:pontoY 
+                })
+                while (rastro.length > rastro) {
+                    rastro.shift();
+                }
+                //Quando a comidinha for comida, ela reposiciona em outro lugar
+                if(comiX==pontoX && comiY==pontoY){
+                    rastro++;
+                    comiX = Math.floor(Math.random()*qtdP);
+                    comiY = Math.floor(Math.random()*qtdP);
+                }
+
+            }
+            function teclado(event){
+                switch (event.keyCode) {
+                    case 37: //lefft
+                        velX = -veloc;
+                        velY = 0;
+                        break;
+                    case 38: //up
+                        velX = 0;
+                        velY = -veloc;
+                        break;
+                    case 39: //right
+                        velX = veloc;
+                        velY = 0;
+                        break;
+                    case 40: //down
+                        velX = 0;
+                        velY = veloc;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+    
+    </script>
+</body>
+</html>
